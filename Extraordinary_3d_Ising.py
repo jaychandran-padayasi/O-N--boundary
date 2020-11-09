@@ -29,15 +29,15 @@ M_max = 9
 eta = 0.03804
 nu = 0.67155
 omega = 0.78911
-Bulk_Operators = [3 - (1/nu), 3 + omega, 6.984, 'Delta_e1', 'Delta_e2']
-# Bulk_Operators = [1.4126713, 3.830318, 'Delta_e1', 'Delta_e2']
+# Bulk_Operators = [3 - (1/nu), 3 + omega, 'Delta_e1', 'Delta_e2']
+Bulk_Operators = [1.5113622, 3.78911, 'Delta_e1', 'Delta_e2']
 Bdy_Operators = [2.0, 3.0]
 
 # # Specify External Dimensions
-delta_1 = 0.5 + 0.5*eta
-delta_2 = 0.5 + 0.5*eta
-# delta_1 = 0.51815415
-# delta_2 = 0.51815415
+# delta_1 = 0.5 + 0.5*eta
+# delta_2 = 0.5 + 0.5*eta
+delta_1 = 0.51908822
+delta_2 = 0.51908822
 delta_12 = 0
 
 # Customizable evaluate() function for unknowns given a matrix
