@@ -1,0 +1,30 @@
+Optimization terminated successfully.
+         Current function value: 0.074776    
+         Iterations: 2917
+     con: array([-1.7053026e-13])
+     fun: 0.07477564523674156
+ message: 'Optimization terminated successfully.'
+     nit: 2917
+   slack: array([-4.4472468e-04, -1.2015790e-04,  1.6587232e-04, ...,
+        1.0174442e+01,  5.0852844e+00,  7.2759576e-12])
+  status: 0
+ success: True
+       x: array([ 7.4775645e-02, -7.6172556e-02,  1.2805614e-02, -2.1963642e-01,
+       -5.8494787e-01, -7.1552580e-01, -4.1422960e-01, -1.1986866e-01,
+       -1.7101576e-02, -1.0960782e-03, -2.3148336e-05])
+Random Bulk dimensions are:  [26.4040509 26.048999   5.3253028 26.399044  11.3710535]
+Action of result functional on rand_bulk gives:
+-82.6643683784764
+-73.4241464734999
+-7.16283833495646e-5
+-82.5285641256281
+-0.0114063463127667
+Random boundary dimensions are:  [21.4960368 21.2389303  6.2321158 21.4924112 10.6100732]
+Action of result functional on rand_bdy gives:
+-785.893024567900
+-834.472880243644
+-31.0237111558994
+-786.593004284310
+-379.842876768458
+Action of result functional on normalizing block:
+-0.999999999999833

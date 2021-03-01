@@ -1,0 +1,30 @@
+N =  5
+Bulk Operators:  [1.1568, 1.7174554315762471, 3.76, 'Delta_e1', 'Delta_e2']
+External Dimension:  0.5169
+Getting Conformal Block Table
+Done.
+Minimizing Singular Values ...
+Calculating Singular Values
+c:/Users/jaych/OneDrive/Documents/Github/O-N--boundary/Symmetric_N1.py:203: OptimizeWarning: Unknown solver options: maxfun
+  res = minimize(evaluate, [6, 12], args=(derMatrix_expr), method='Nelder-Mead', options={'disp':True, 'maxfun':1000})
+Optimization terminated successfully.
+         Current function value: -32.854105
+         Iterations: 130
+         Function evaluations: 276
+ final_simplex: (array([[ 7.1617014, 12.7329377],
+       [ 7.1617014, 12.7329377],
+       [ 7.1617014, 12.7329377]]), array([-32.8541049, -32.8541049, -32.8541049]))
+           fun: -32.854104862788354
+       message: 'Optimization terminated successfully.'
+          nfev: 276
+           nit: 130
+        status: 0
+       success: True
+             x: array([ 7.1617014, 12.7329377])
+Done, took  137.263 sec
+Bulk OPE Coefficients:
+a_T*lambda_(sse) =  6.2928687418470854
+a_e*lambda_(sse) =  [3.6562598 3.2077252 0.2813372 0.0077059]
+Boundary OPE coefficients:
+mu_(sD)^2 =  0.06277915474080371
+a_s^2 =  9.311459295666884

@@ -1,0 +1,26 @@
+N =  2
+Bulk Operators:  [1.5113601, 3.78901, 'Delta_e1', 'Delta_e2']
+External Dimension:  0.519088
+Getting Conformal Block Table
+Done.
+Minimizing Singular Values ...
+Optimization terminated successfully.
+         Current function value: -33.956901
+         Iterations: 13
+         Function evaluations: 602
+   direc: array([[ 3.86629909e-02,  1.54880620e-01],
+       [-1.73760384e-12, -5.57449929e-12]])
+     fun: -33.95690089017916
+ message: 'Optimization terminated successfully.'
+    nfev: 602
+     nit: 13
+  status: 0
+ success: True
+       x: array([ 6.99789631, 12.48153781])
+Done, took  351.288 sec
+Bulk OPE Coefficients:
+a_e*lambda_(sse) = { [3.97530256 1.35671956 0.14225548 0.00428346] }
+Boundary OPE coefficients:
+mu_phi^2 =  0.24129642689422473
+mu_(sD)^2 =  0.0722598557625894
+a_s^2 =  8.510808577776043
