@@ -18,14 +18,14 @@ matplotlib.rcParams.update({'font.size': 14})
 matplotlib.rcParams['figure.figsize'] = (14,8) 
 
 np.set_printoptions(precision=7)
-
+N = 3
 dim = 3
-M_max = 15
-num_boundary = 30
-num_bulk = 30
-bulk_begin, bulk_end = 1.0, 10.0
-bdy_begin, bdy_end = 2.9, 7.0
-
+M_max = 10
+num_boundary = 1000
+num_bulk = 1000
+bulk_begin, bulk_end = 1.5957, 30.0
+bdy_begin, bdy_end = 3.0, 25.0
+load_EffDelta = 0
 
 delta_1 = 0.51928
 delta_2 = 0.51928
@@ -53,10 +53,10 @@ class ConformalBlockTable:
 				self.dim = dim
 				self.m_order = list(range(M_max+1))
 				Delta, Delta_12, Xi = symbols('Delta Delta_12 Xi')
-				Bulk_expr = -1*(Xi**(Delta/2))*hyper([(Delta + Delta_12)/2 , (Delta - Delta_12)/2], [Delta + 1 - (dim/2)],-Xi)
-				Bdy_expr = (Xi**(-Delta + (delta_1 + delta_2)/2))*hyper([Delta, Delta + 1 - (dim/2)], [2*Delta + 2 - (dim)], -Xi**(-1))
+				Bulk_expr = N*(Xi**(Delta/2))*hyper([(Delta + Delta_12)/2 , (Delta - Delta_12)/2], [Delta + 1 - (dim/2)],-Xi)
+				Bdy_expr = -1*(Xi**(-Delta + (delta_1 + delta_2)/2))*hyper([Delta, Delta + 1 - (dim/2)], [2*Delta + 2 - (dim)], -Xi**(-1))
 				# if dim == 3:
-				#         Bdy_expr = (0.5/(Xi**0.5))*((4/(1 + Xi))**(Delta - 0.5))*(1 + (Xi/(1+Xi))**(0.5))**(-2*(Delta - 1))
+				#         Bdy_expr = -1 - (Xi/(Xi+1))**0.5
 				Bulk_array = [Bulk_expr]
 				Bdy_array = [Bdy_expr]
 				for n in range(1, M_max + 1):
@@ -75,7 +75,7 @@ class ConformalBlockTable:
 		def bdy_block(self, delta):
 				bdy_array = []
 				for n in range(M_max+1):
-					eval = -1*self.table[1,n].subs({"Delta":delta, "Delta_12":0.00, "Xi":1.00}).evalf()
+					eval = self.table[1,n].subs({"Delta":delta, "Delta_12":0.00, "Xi":1.00}).evalf()
 					bdy_array.append(eval)
 				return bdy_array
 
@@ -95,30 +95,53 @@ table1 = ConformalBlockTable(dim, M_max)
 end_time = time.time() - start_time
 print('Done, took', np.round(end_time, 2), 'sec')
 
-bulk_dims = np.linspace(bulk_begin, bulk_end, num_bulk)
-bdy_dims = np.linspace(bdy_begin, bdy_end, num_boundary)
+if load_EffDelta == 0:
+	bulk_dims = np.linspace(bulk_begin, bulk_end, num_bulk)
+	bdy_dims = np.linspace(bdy_begin, bdy_end, num_boundary)
+	print('Constructing F_\Delta')
+	start_time = time.time()
+	Eff_Delta = []
+	for bulkOp in bulk_dims:
+		Eff_Delta.append(table1.bulk_block(bulkOp))
 
-print('Constructing F_\Delta')
-start_time = time.time()
-Eff_Delta = []
-for bulkOp in bulk_dims:
-	Eff_Delta.append(table1.bulk_block(bulkOp))
+	Eff_Delta.append(table1.identity_block())
 
-Eff_Delta.append(table1.identity_block())
+	for bdyOp in bdy_dims:
+		Eff_Delta.append(table1.bdy_block(bdyOp))
 
-for bdyOp in bdy_dims:
-	Eff_Delta.append(table1.bdy_block(bdyOp))
-
-Eff_Delta = np.array(Eff_Delta)
-print(np.shape(Eff_Delta))
-end_time = time.time() - start_time
-print('Done, took', np.round(end_time, 2), 'sec')
+	Eff_Delta = np.array(Eff_Delta)
+	print(np.shape(Eff_Delta))
+	end_time = time.time() - start_time
+	print('Done, took', np.round(end_time, 2), 'sec')
+	np.savetxt('Eff_Delta_52.txt', Eff_Delta)
+else:
+	print('Loading Eff_Delta')
+	Eff_Delta = np.loadtxt('Eff_Delta_52.txt')
 
 
-c_T = np.array([1] + [0]*M_max)
-b_ub = np.array([0]*(num_boundary + num_bulk + 1))
-b_eq = 1
-A_eq = np.array([table1.bdy_block(dim-1)])
+c_T = np.array([N] + [0]*M_max)
+b_ub = np.array([0]*(num_boundary+num_bulk+1))
+b_eq = -1
+A_eq = (N-1)*np.array([table1.bdy_block(dim-1)])
+bound_array = [(1e-5, None)]
+for i in range(M_max):
+	bound_array.append((None, None))
 
-res = linprog(c_T, Eff_Delta, b_ub, A_eq, b_eq, method='revised simplex', options={"disp":True, "maxiter":4000})
+res = linprog(c_T, Eff_Delta, b_ub, A_eq, b_eq, bounds = bound_array, method='revised simplex', options={"disp":True, "tol":2e-3, "maxiter":10000,  'lstsq':True, 'presolve':True, 'sym_pos':False})
 print(res)
+random_pars = np.random.rand(5)
+rand_bulk = random_pars*29 + 1.0
+print("Random Bulk dimensions are: ", rand_bulk)
+print('Action of result functional on rand_bulk gives:')
+for i in range(len(rand_bulk)):
+	bulkFunc = np.dot(res.x, table1.bulk_block(rand_bulk[i]))
+	print(-1*bulkFunc)
+rand_bdy = random_pars*21 + 3.1
+print("Random boundary dimensions are: ", rand_bdy)
+print('Action of result functional on rand_bdy gives:')
+for i in range(len(rand_bdy)):
+	bdyFunc = np.dot(res.x, table1.bdy_block(rand_bdy[i]))
+	print(-1*bdyFunc)
+
+print("Action of result functional on normalizing block:")
+print(-1*np.dot(res.x, table1.bdy_block(dim-1)))
